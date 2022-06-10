@@ -1,8 +1,8 @@
+import math
+
 # chi square test inputting directly value of Oi
 totalData = 0
-Oi = []
-N = 0
-Dobs = 0
+nums = []
 
 userOrFile = input("Enter 'user' to input values manually or 'file' to input values from a file: ")
 
@@ -11,8 +11,7 @@ if userOrFile == 'user':
 
     for ptr in range(totalData):
         tempOi = float(input(f"Enter Oi for class no {ptr + 1}: "))
-        Oi.append(tempOi)
-        N += tempOi
+        nums.append(tempOi)
 else:
     #get file object
     f = open("data-set.txt", "r")
@@ -25,19 +24,58 @@ else:
             break
         totalData += 1
         #you can access the line
-        Oi.append(float(line.strip()))
-        N+= float(line.strip())
+        tempOi = float(line.strip())
+        nums.append(tempOi)
 
     #close file
     f.close
 
-print("All Oi :", Oi)
-Ei = N / totalData
 
-for datum in Oi:
-    Dobs += pow((datum - Ei), 2) / Ei
+totalClass = round(math.log(totalData) / math.log(2))
+print("Total class: ", totalClass)
 
-print("D obs is: ", Dobs)
+rangeValue = round((max(nums) - min(nums)) / totalClass, 3)
+print("Range difference: ", rangeValue)
+
+# calculate all classes ranges
+classRanges = {}
+firstStart = min(nums)
+firstEnd = round(firstStart + rangeValue, 3)
+
+classStart = [firstStart]
+classEnd = [firstEnd]
+
+for ptr in range(1, totalClass + 1):
+    classStart.append(firstEnd)
+    firstEnd += rangeValue
+    firstEnd = round(firstEnd, 3)
+    classEnd.append(firstEnd)
+
+classRanges = {'start': classStart, 'end': classEnd}
+
+flag = 0
+oiList = []
+
+# calculate oi for each class
+print()
+print("Class \t\t   | \tOi")
+print("_______________|_____________")
+for start in classRanges['start']:
+    oi = 0
+    for ptr in range(totalData):
+        if start <= nums[ptr] < classRanges['end'][flag]:
+            oi += 1
+    print(f"{start} - {classRanges['end'][flag]}  | {oi}")
+    oiList.append(oi)
+    flag += 1
+
+# calculate chi square
+Dobs = 0
+
+for datum in oiList:
+    Dobs += pow((datum - totalClass), 2) / totalClass
+
+print("D obs is: ", round(Dobs, 4))
 
 Dcritical = float(input("Enter D critical: "))
 
