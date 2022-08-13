@@ -10,7 +10,7 @@ _random = []
 # Rank the N random numbers
 for i in range(0, N):
     _random.append(random.random())
-    _random.sort()
+_random.sort()
 
 # Calculate max(i/N-Ri)
 for i in range(1, N + 1):
@@ -30,6 +30,6 @@ print(ans)
 
 dalpha = float(input("Enter the value of D alpha : "))
 if ans > dalpha:
-    print("The null hypothesis is rejected")
+    print("Rejected")
 else:
-    print("The null hypothesis is not rejected")
+    print("Accepted")
