@@ -15,7 +15,7 @@ X = X.astype(int)
 
 # Two features with highest chi-squared statistics are selected
 chi2_features = SelectKBest(chi2, k=2)
-X_kbest_features = chi2_features.fit_transform(X, y)
+X_kbest = chi2_features.fit_transform(X, y)
 
 # Reduced features
 print('Original feature number:', X.shape[1])
